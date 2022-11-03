@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+   
+</head>
+
+<body>
+    <h1>New Color</h1>
+    <div class="new_color"> <input id="name" type="text" placeholder="Name of color">
+        <p class="error"></p> <select>
+            <option>RGB</option>
+            <option>RGBA</option>
+            <option>HEX</option>
+        </select>
+        <p></p> <input id="color" type="text" placeholder="Color">
+        <p class="error"></p> <button onclick="saveColor()">Save</button>
+    </div>
+    <h1>All colors</h1>
+    <div class="all-colors"> </div>
+</body>
+<script>
+    if (localStorage.colors) {
+        colors = JSON.parse(localStorage.getItem("colors"))
+    } else {
+        colors = []
+    }
+
+    displayColors()
+
+    function saveColor() {
+        const color = {
+            name: document.querySelector("#name").value,
+            type: document.querySelector("select").value,
+            code: document.querySelector("#color").value,
+        }
+        colors.push(color)
+        localStorage.setItem("colors", JSON.stringify(colors))
+        displayColors()
+    }
+
+    function displayColors() {
+        let blocks = ""
+        for (let i = 0; i < colors.length; i++) {
+            let block = `<div class='color' style='background-color: ${getColorCode(colors[i].type, colors[i].code)}'> 
+                <div class='inner-text'> 
+                    <p>${colors[i].name}</p> 
+                    <p>${colors[i].type}</p> 
+                    <p>${colors[i].code}</p> 
+                </div> </div> `
+            blocks += block;
+        }
+        let allColors = document.querySelector(".all-colors")
+        allColors.innerHTML = blocks
+    }
+
+    let type = ['RGB', 'HEX', 'RGBA'];
+    let error1 = document.querySelector(".error").value;
+
+    function getColorCode (type, code) {
+        if (type === 'RGB') {
+            let arr = /^(\d{1,3}), (\d{1,3}), (\d{1,3})$/
+            return arr.test(code)
+        } else if (type === 'RGBA') {
+            let arr = /^(\d{1,3}), (\d{1,3}), (\d{1,3}), (\S{1,3})$/
+            return arr.test(code)
+        } else { 
+            let arr = /^#([0-9a-f]{3,6})$/
+            arr.test(code)
+        }
+    }
+
+</script>
+
+    
+</body>
+<style>
+
+    body {
+        display: grid;
+        align-items: center;
+        text-align: center;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .all-colors {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+    .inner-text {
+        width: 150px;
+        height: 150px;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .color {
+        width: 200px;
+        height: 200px;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        background-color: #0000ff;
+    }
+</style>
+
+</html>
